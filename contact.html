@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DB Code Explorer – Contact</title>
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div style="display:flex; align-items:center;">
+            <img src="logo.png" alt="DB Code Explorer Logo"
+                style="height:36px; margin-right:1em; background-color:#4CAF50;" />
+            <h1>DB Code Explorer</h1>
+        </div>
+        <button id="menu-toggle"
+            style="display:none; font-size:1.8em; background:none; border:none; color:white; cursor:pointer;">☰</button>
+        <nav id="nav-links">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="classes.html">Classes</a>
+            <a href="free-trial.html">Free Trail</a>
+            <a href="contact.html">Register for Classes</a>
+        </nav>
+    </header>
+
+    <section style="background: linear-gradient(to right, #fce4ec, #f8bbd0);">
+        <div class="section-content">
+            <h2 style="color:#c2185b;">📬 Register for Classes</h2>
+            <p>Ready to sign up or have questions? We'd love to hear from you!</p>
+
+            <form action="https://formspree.io/f/mkgbeyln" class="fs-form fs-layout__2-column" target="_top"
+                method="POST">
+                <fieldset>
+                    <div class="fs-field">
+                        <label class="fs-label" for="full-name">Full Name</label>
+                        <input class="fs-input" id="full-name" name="full-name" placeholder="Enter your name" />
+                    </div>
+                    <div class="fs-field">
+                        <label class="fs-label" for="email-address">Email Address</label>
+                        <input class="fs-input" id="email-address" name="email-address"
+                            placeholder="Enter your email address" required />
+                    </div>
+                    <div class="fs-field">
+                        <label class="fs-label" for="phone-number">Phone Number</label>
+                        <input class="fs-input" id="phone-number" name="phone-number"
+                            placeholder="Enter your phone number (optional)" />
+                    </div>
+                    <div class="fs-field">
+                        <label class="fs-label" for="interest">Class Name (you're interested in)</label>
+                        <input class="fs-input" id="interest" name="interest" placeholder="Class Name" />
+                    </div>
+
+                    <div class="fs-field col-span-full">
+                        <label class="fs-label" for="selected-days">
+                            Please write down your student's first and second preferred days
+                        </label>
+                        <input class="fs-input" id="selected-days" name="selected-days"
+                            placeholder="First and second preferred days (optional)" />
+                    </div>
+
+                    <div class="fs-field col-span-full">
+                        <label class="fs-label" for="interest-reason">Additional Comments</label>
+                        <textarea class="fs-textarea" id="interest-reason" name="interest-reason"
+                            placeholder="Additional Comments (optional)"></textarea>
+                    </div>
+
+                    <div class="fs-field col-span-full">
+                        <label class="fs-label" for="referral-source">How Did You Hear About Us?</label>
+                        <input class="fs-input" id="referral-source" name="referral-source" placeholder="Optional" />
+                    </div>
+                </fieldset>
+
+                <div class="fs-button-group">
+                    <button class="fs-button" type="submit">Send</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 DB Code Explorer. All rights reserved.</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+
+</html>
