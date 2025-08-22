@@ -493,3 +493,148 @@ fs-checkbox,
     text-align: center;
     white-space: nowrap;
 }
+
+/* === Mobile-first layout fixes (append to end of style.css) === */
+
+/* Prevent horizontal scroll anywhere */
+html,
+body {
+    overflow-x: hidden;
+}
+
+/* Keep big containers within viewport */
+header,
+main,
+footer,
+.section-full,
+.section-content,
+form,
+fieldset {
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: clip;
+}
+
+/* Make the hamburger actually visible on mobile
+   (overrides inline display:none that’s in HTML) */
+@media (max-width: 768px) {
+    #menu-toggle {
+        display: block !important;
+    }
+}
+
+/* Header as anchor for dropdown menu */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+/* Desktop: show links inline, hide burger, keep nav static */
+@media (min-width: 769px) {
+    #nav-links {
+        display: flex !important;
+        gap: 1.2em;
+        position: static;
+    }
+
+    #menu-toggle {
+        display: none !important;
+    }
+}
+
+/* Mobile: dropdown menu */
+@media (max-width: 768px) {
+
+    /* nav hidden by default */
+    #nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: calc(100% + 8px);
+        /* just below header */
+        right: 16px;
+        left: 16px;
+        background: #4CAF50;
+        padding: 12px;
+        border-radius: 10px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, .18);
+        z-index: 2000;
+        max-width: calc(100vw - 32px);
+    }
+
+    /* show when toggled */
+    #nav-links.show {
+        display: flex;
+    }
+
+    #nav-links a {
+        display: block;
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        padding: 8px 10px;
+        border-radius: 8px;
+    }
+
+    #nav-links a:hover {
+        background: rgba(255, 255, 255, .12);
+    }
+
+    /* Make the button pleasant */
+    #menu-toggle {
+        background: none;
+        border: none;
+        color: #fff;
+        font-size: 1.8em;
+        cursor: pointer;
+    }
+}
+
+/* Form: stack to one column on small screens (your forms use .fs-form.fs-layout__2-column) */
+@media (max-width: 768px) {
+    .fs-form.fs-layout__2-column {
+        grid-template-columns: 1fr !important;
+    }
+
+    .fs-form.fs-layout__2-column fieldset {
+        grid-template-columns: 1fr !important;
+    }
+
+    .fs-form.fs-layout__2-column .col-span-full,
+    .fs-form.fs-layout__2-column .fs-button-group,
+    .fs-form.fs-layout__2-column fieldset>* {
+        grid-column: 1 / -1 !important;
+    }
+}
+
+/* Ensure inputs never exceed container width */
+img,
+video,
+canvas,
+iframe,
+input,
+select,
+textarea,
+button {
+    max-width: 100%;
+}
+
+/* Break long words/URLs that could blow layout wider than screen */
+.section-content,
+p,
+ul,
+li,
+label {
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
+
+@media (min-width: 992px) {
+    .hero {
+        /* <-- use the class on the section that has the bg */
+        min-height: 100vh;
+        /* or 100svh for mobile-safe units */
+
+    }
+}
