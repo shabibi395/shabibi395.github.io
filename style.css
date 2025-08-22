@@ -638,3 +638,82 @@ label {
 
     }
 }
+
+/* Professional, low-distraction gallery */
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.gallery-polaroids {
+    max-width: 900px;
+    /* slightly narrower than text block */
+    margin-inline: auto;
+    /* center it */
+    opacity: 0.95;
+    /* lower visual weight vs. hero text */
+}
+
+.gallery-card {
+    --r: 0deg;
+    /* per-card rotation set below */
+    background: #fff;
+    padding: 8px;
+    /* “polaroid” frame */
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(2, 8, 23, 0.08);
+    transform: rotate(var(--r));
+    transition: transform 220ms ease, box-shadow 220ms ease, filter 220ms ease, opacity 220ms ease;
+}
+
+.gallery-card img {
+    width: 100%;
+    height: 300px;
+    /* consistent card height */
+    object-fit: cover;
+    /* neat crop */
+    display: block;
+    border-radius: 8px;
+    filter: saturate(0.9) contrast(0.98);
+    /* slightly muted so text stays the star */
+}
+
+/* Subtle, alternating tilt */
+.gallery-polaroids .gallery-card:nth-child(1) {
+    --r: -2.2deg;
+}
+
+.gallery-polaroids .gallery-card:nth-child(2) {
+    --r: 1.6deg;
+}
+
+.gallery-polaroids .gallery-card:nth-child(3) {
+    --r: -1.0deg;
+}
+
+/* On hover: gently straighten & brighten (desktop only) */
+.gallery-card:hover {
+    transform: rotate(0deg) translateY(-2px);
+    box-shadow: 0 12px 30px rgba(2, 8, 23, 0.15);
+}
+
+.gallery-card:hover img {
+    filter: saturate(1) contrast(1);
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+
+    .gallery-card,
+    .gallery-card:hover {
+        transition: none;
+    }
+}
+
+/* Hide entire gallery on mobile/tablet (keeps your original intent) */
+@media (max-width: 768px) {
+    .desktop-only {
+        display: none !important;
+    }
+}
