@@ -1,37 +1,44 @@
-// Mobile nav toggle + accessibility + safety
+// script.js
 (function () {
-    const btn = document.getElementById('menu-toggle');
-    const nav = document.getElementById('nav-links');
-    if (!btn || !nav) return;
+    // Prevent double-binding if script is included twice
+    if (window.__navInitDone) return;
+    window.__navInitDone = true;
 
-    // Start hidden on mobile
-    nav.classList.remove('show');
+    function ready(fn) {
+        if (document.readyState !== 'loading') fn();
+        else document.addEventListener('DOMContentLoaded', fn);
+    }
 
-    const syncAria = () =>
-        btn.setAttribute('aria-expanded', nav.classList.contains('show') ? 'true' : 'false');
+    ready(function () {
+        var btn = document.getElementById('menu-toggle');
+        var nav = document.getElementById('nav-links');
+        if (!btn || !nav) return;
 
-    btn.addEventListener('click', () => {
-        nav.classList.toggle('show');
-        syncAria();
-    });
-
-    // Close when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!nav.classList.contains('show')) return;
-        if (!nav.contains(e.target) && !btn.contains(e.target)) {
-            nav.classList.remove('show');
-            syncAria();
+        function setOpen(open) {
+            nav.classList.toggle('show', open);
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
         }
-    });
+        function toggle() { setOpen(!nav.classList.contains('show')); }
 
-    // Close menu when resizing to desktop
-    const mq = window.matchMedia('(min-width: 769px)');
-    const handleResize = () => {
-        if (mq.matches) {
-            nav.classList.remove('show');
-            syncAria();
-        }
-    };
-    mq.addEventListener('change', handleResize);
-    syncAria();
+        // iPhone-safe: listen to both touch and click
+        btn.addEventListener('touchstart', function (e) {
+            e.preventDefault(); e.stopPropagation(); toggle();
+        }, { passive: false });
+        btn.addEventListener('click', function (e) {
+            e.preventDefault(); e.stopPropagation(); toggle();
+        });
+
+        // Close when tapping outside
+        document.addEventListener('click', function (e) {
+            if (!nav.classList.contains('show')) return;
+            if (e.target.closest('#nav-links') || e.target.closest('#menu-toggle')) return;
+            setOpen(false);
+        });
+
+        // Close with ESC
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') setOpen(false);
+        });
+    });
 })();
+

@@ -717,3 +717,53 @@ label {
         display: none !important;
     }
 }
+
+/* Keep header above any hero artwork */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+@media (max-width: 768px) {
+
+    /* Show burger on mobile */
+    #menu-toggle {
+        display: block !important;
+        touch-action: manipulation;
+        /* improves iOS tap */
+    }
+
+    /* Hide menu by default; show as dropdown when toggled */
+    #nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: calc(100% + 8px);
+        /* just below header */
+        right: 16px;
+        left: 16px;
+        background: #4CAF50;
+        padding: 12px;
+        border-radius: 10px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, .18);
+        z-index: 2000;
+    }
+
+    #nav-links.show {
+        display: flex !important;
+    }
+}
+
+/* Desktop: inline links, hide burger */
+@media (min-width: 769px) {
+    #nav-links {
+        display: flex !important;
+        gap: 1.2em;
+        position: static;
+    }
+
+    #menu-toggle {
+        display: none !important;
+    }
+}

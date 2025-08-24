@@ -7,6 +7,7 @@
     <title>DB Code Explorer – Classes</title>
     <link rel="icon" type="image/png" href="favicon.png" />
     <link rel="stylesheet" href="style.css" />
+    <script src="/script.js" defer></script>
 </head>
 
 <body>
@@ -18,16 +19,20 @@
                 style="height:36px; margin-right:1em; background-color:#4CAF50;" />
             <h1>DB Code Explorer</h1>
         </div>
-        <button id="menu-toggle"
+
+        <button type="button" id="menu-toggle" aria-controls="nav-links" aria-expanded="false"
+            aria-label="Toggle navigation"
             style="font-size:1.8em; background:none; border:none; color:white; cursor:pointer;">☰</button>
+
         <nav id="nav-links">
             <a href="index.html">Home</a>
             <a href="about.html">About</a>
             <a href="classes.html">Classes</a>
-            <a href="free-trial.html">Free Trail</a>
+            <a href="free-trial.html">Free Trial</a> <!-- (spelling) -->
             <a href="contact.html">Register for Classes</a>
         </nav>
     </header>
+
     <main>
         <section class="hero section-full" style="background: linear-gradient(to right, #e3f2fd, #e1f5fe);">
             <div class="section-content">
