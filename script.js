@@ -20,13 +20,18 @@
         }
         function toggle() { setOpen(!nav.classList.contains('show')); }
 
-        // iPhone-safe: listen to both touch and click
-        btn.addEventListener('touchstart', function (e) {
+        // iPhone-safe: prefer pointer, fall back to click
+        const tapEvent = ('onpointerup' in window) ? 'pointerup' : 'click';
+        btn.addEventListener(tapEvent, function (e) {
             e.preventDefault(); e.stopPropagation(); toggle();
         }, { passive: false });
-        btn.addEventListener('click', function (e) {
-            e.preventDefault(); e.stopPropagation(); toggle();
-        });
+
+        // Optional: also listen to click only if we didn't already use click above
+        if (tapEvent !== 'click') {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault(); e.stopPropagation(); toggle();
+            });
+        }
 
         // Close when tapping outside
         document.addEventListener('click', function (e) {
