@@ -29,8 +29,8 @@
         // Optional: also listen to click only if we didn't already use click above
         if (tapEvent !== 'click') {
             btn.addEventListener('click', function (e) {
-                e.preventDefault(); e.stopPropagation(); toggle();
-            });
+                e.preventDefault(); e.stopPropagation(); /* no toggle here */
+            }, { passive: false });
         }
 
         // Close when tapping outside
