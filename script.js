@@ -1,6 +1,5 @@
-// script.js — DB Code Explorer mobile nav (iPhone-safe)
+// script.js — DB Code Explorer mobile nav (iPhone-safe, v13)
 (function () {
-    // Prevent double-initialization
     if (window.__dbcxNavInit) return;
     window.__dbcxNavInit = true;
 
@@ -15,74 +14,62 @@
         if (!btn || !nav) return;
 
         var lastToggleAt = 0;
-        var TOGGLE_GUARD_MS = 400;
+        var GUARD = 800; // ms; protects against iOS follow-up clicks
 
-        function isOpen() {
-            return nav.classList.contains("show");
-        }
+        function isOpen() { return nav.classList.contains("show"); }
 
         function setOpen(open) {
-            if (open) {
-                nav.classList.add("show");
-            } else {
-                nav.classList.remove("show");
-            }
+            nav.classList.toggle("show", open);
             btn.setAttribute("aria-expanded", String(open));
-            // Optional: prevent background scroll when open (mobile UX)
             document.documentElement.classList.toggle("overflow-hidden", open);
             document.body.classList.toggle("overflow-hidden", open);
         }
 
-        function toggle() {
-            setOpen(!isOpen());
+        function toggle() { setOpen(!isOpen()); }
+        function toggleWithStamp() { toggle(); lastToggleAt = Date.now(); }
+
+        // Minimal .closest() fallback
+        function within(el, selector) {
+            for (var n = el; n && n !== document; n = n.parentElement) {
+                if (n.matches && n.matches(selector)) return true;
+            }
+            return false;
         }
 
-        function toggleWithStamp() {
-            toggle();
-            lastToggleAt = Date.now();
-        }
+        // Prefer touch on iOS; else pointer; else click
+        var tapEvent = ("ontouchend" in window) ? "touchend"
+            : ("onpointerup" in window) ? "pointerup"
+                : "click";
 
-        // Choose best tap event for iPhone & modern browsers
-        var tapEvent =
-            "onpointerup" in window
-                ? "pointerup"
-                : "ontouchend" in window
-                    ? "touchend"
-                    : "click";
-
-        function handleTap(e) {
+        btn.addEventListener(tapEvent, function (e) {
             e.preventDefault();
             e.stopPropagation();
             toggleWithStamp();
-        }
+        }, { passive: false });
 
-        // Bind the primary tap handler
-        if (tapEvent === "click") {
-            // No pointer/touch support: click is the real event
-            btn.addEventListener("click", handleTap);
-        } else {
-            // pointerup/touchend does the real toggle
-            btn.addEventListener(tapEvent, handleTap, { passive: false });
+        // iOS fires a synthetic click after touch/pointer — swallow it
+        btn.addEventListener("click", function (e) {
+            if (Date.now() - lastToggleAt < GUARD) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+        }, { passive: false });
 
-            // iOS fires a synthetic click right after pointer/touch — swallow it
-            btn.addEventListener(
-                "click",
-                function (e) {
-                    if (Date.now() - lastToggleAt < TOGGLE_GUARD_MS) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                    }
-                },
-                { passive: false }
-            );
-        }
-
-        // Close when clicking outside the menu (ignore immediate follow-up events)
-        document.addEventListener("click", function (e) {
-            if (Date.now() - lastToggleAt < TOGGLE_GUARD_MS) return;
+        // Close when tapping/clicking outside (capture early)
+        var outsideEvent = ("onpointerdown" in window) ? "pointerdown" : "touchstart";
+        document.addEventListener(outsideEvent, function (e) {
             if (!isOpen()) return;
-            if (e.target.closest("#nav-links") || e.target.closest("#menu-toggle"))
-                return;
+            if (Date.now() - lastToggleAt < GUARD) return;
+            var t = e.target;
+            if (t === btn || within(t, "#menu-toggle") || within(t, "#nav-links")) return;
+            setOpen(false);
+        }, true);
+
+        // Fallback close on document click (if above didn’t fire)
+        document.addEventListener("click", function (e) {
+            if (!isOpen()) return;
+            if (Date.now() - lastToggleAt < GUARD) return;
+            if (within(e.target, "#menu-toggle") || within(e.target, "#nav-links")) return;
             setOpen(false);
         });
 
@@ -92,27 +79,17 @@
         });
 
         // Close after tapping a nav link
-        Array.prototype.forEach.call(
-            nav.querySelectorAll("a"),
-            function (link) {
-                link.addEventListener("click", function () {
-                    if (isOpen()) setOpen(false);
-                });
-            }
-        );
+        Array.prototype.forEach.call(nav.querySelectorAll("a"), function (a) {
+            a.addEventListener("click", function () { if (isOpen()) setOpen(false); });
+            a.addEventListener("touchend", function () { if (isOpen()) setOpen(false); }, { passive: true });
+        });
 
-        // If the window becomes desktop size, ensure menu is reset
+        // Reset if switching to desktop
         var mq = window.matchMedia("(min-width: 769px)");
-        function handleMQ(ev) {
-            if (ev.matches) {
-                // Desktop — ensure clean state
-                setOpen(false);
-            }
-        }
-        if (mq.addEventListener) mq.addEventListener("change", handleMQ);
-        else mq.addListener(handleMQ); // older Safari
+        function onMQ(e) { if (e.matches) setOpen(false); }
+        if (mq.addEventListener) mq.addEventListener("change", onMQ);
+        else mq.addListener(onMQ);
 
-        // Initialize ARIA state
         btn.setAttribute("aria-controls", "nav-links");
         btn.setAttribute("aria-expanded", "false");
     });
