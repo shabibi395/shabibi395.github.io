@@ -729,29 +729,14 @@ header {
 
     /* Show burger on mobile */
     #menu-toggle {
-        display: block !important;
+        position: relative;
+        z-index: 3001;
         touch-action: manipulation;
-        /* improves iOS tap */
+        -webkit-tap-highlight-color: transparent;
     }
 
-    /* Hide menu by default; show as dropdown when toggled */
     #nav-links {
-        display: none;
-        flex-direction: column;
-        position: absolute;
-        top: calc(100% + 8px);
-        /* just below header */
-        right: 16px;
-        left: 16px;
-        background: #4CAF50;
-        padding: 12px;
-        border-radius: 10px;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, .18);
-        z-index: 2000;
-    }
-
-    #nav-links.show {
-        display: flex !important;
+        z-index: 3000;
     }
 }
 
